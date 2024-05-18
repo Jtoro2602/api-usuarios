@@ -1,0 +1,13 @@
+## MASKING ENVIRONMENT
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name:  ms-pta-procces-env
+  labels:
+    name:  ms-pta-procces-env
+data:
+  #[KEY-CONFIG-MAP]: [VALUE]
+#---------------------------------------- System Configuration  -------------------------------#
+  SYS_LOGGING_LEVEL: 'INFO' # NO CAMBIAR VALOR SYS_LOGGING_LEVEL
+  MS_PORT: '8080' # NO CAMBIAR VALOR MS_PORT
+#----------------------------------------------------------------------------------------------#

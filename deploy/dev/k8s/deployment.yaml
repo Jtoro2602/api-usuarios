@@ -1,0 +1,62 @@
+# POD - API configuration
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  # Normal service name ej:oms-service-dal
+  name: ms-pta-procces
+spec:
+  # Number of replicas
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ms-pta-procces
+  template:
+    metadata:
+      labels:
+        # Normal service name and tier (same selectors as the service configuration)
+        app: ms-pta-procces
+        tier: backend
+      annotations:
+        sidecar.istio.io/rewriteAppHTTPProbers: "true"
+    spec:
+      containers:
+#---------------------------------------- [CONTAINER: dal]  -------------------------------#  
+      # Normal service name
+      - name: ms-pta-procces
+        # Change to your project image (from registry)
+        image: gcr.io/{GCP_PROJECT_ID}/{CI_PROJECT_NAME}:{IMAGE_TAG}
+        resources:
+          requests:
+            memory: "128Mi"
+          limits:
+            memory: "256Mi"
+        # Always download the image from registry (dev utility)
+        imagePullPolicy: Always
+#---------------------------------------- [ENV SYSTEM CONFIGURATION]  -------------------------------# 
+        envFrom:
+        - configMapRef:
+            name: ms-pta-procces-env
+#---------------------------------------- [ENV SYSTEM CONFIGURATION]  -------------------------------# 
+#---------------------------------------- [configuration port]  -------------------------------# 
+        ports:
+        - name: trm-rg
+          containerPort: 8080
+          protocol: TCP
+#---------------------------------------- [Readiness Configuration] -------------------------------#
+#         readinessProbe:
+#           httpGet:
+#             path: /actuator/health
+#             port: 8080
+#           initialDelaySeconds: 40
+#           timeoutSeconds: 2
+#           periodSeconds: 4
+#           failureThreshold: 2
+# #---------------------------------------- [Liveness Configuration] -------------------------------#
+        livenessProbe:
+          httpGet:
+            path: /sigla-proyecto/componente/liveness
+            port: 8080
+          initialDelaySeconds: 100
+          timeoutSeconds: 2
+          periodSeconds: 8
+          failureThreshold: 1
