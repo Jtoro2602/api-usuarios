@@ -1,4 +1,0 @@
-include:
-  - project: 'hites/hites-devops-configs'
-    ref: main
-    file: 'main.dynamic-zone-region.springboot-quarkus.gitlab-ci.yml'
